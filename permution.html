@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .flex {
+            display:flex;
+        }
+
+        input {
+            width:25px;
+            height:50px;
+        }
+
+        .small {
+            font-size:20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <select class="pick">
+            <option>permutations</option>
+            <option>combinations</option>
+            <option>complicated experiemental stuff</option>
+        </select>
+        
+        <button class="find">Find</button>
+    </div>
+    <hr style="border:3px solid black">
+
+    <div class="flex per">
+    </div>
+    <div class="pert"></div>
+
+    <div class="flex">
+        <p>Round</p>
+        <input id="check" type="checkbox">
+    </div>
+
+    <div class="num flex"></div>
+    
+    <button class="clear">Clear list</button>
+    <ul class="list">
+    </ul>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+            
+
+        function factor(n){
+            if (n===0 || n===1){
+                return 1;
+            } else {
+                return n * factor(n-1);
+            }
+        }
+
+        function combo(n1, n2){
+            return factor(n1)/(factor(n1-n2)*factor(n2));
+        }
+
+        function permute(n1,n2){
+            return factor(n1)/(factor(n1-n2));
+        }
+        $(".find").on("click", function(event){
+            event.preventDefault();
+            var result = $(".pick").val();
+
+            if (result==="permutations"){
+                $(".pert").html("");
+                $(".per").html("<input class='po'><h2>P</h2><input class='pt'> <button class='perm'>find</button>");
+                $(".perm").on("click", function(){
+                    var firstP=$(".po").val();
+                    var secondP=$(".pt").val();
+                    $("<li></li>").html(permute(firstP, secondP)).appendTo(".list");
+            })
+
+            } else if (result==="combinations"){
+                $(".pert").html("");
+                $(".per").html("<input class='co'><h2>C</h2><input class='ct'><button class='perms'>find</button>");
+                $(".perms").on("click", function(){
+                    var firstC=$(".co").val();
+                    var secondC=$(".ct").val();
+                    $("<li></li>").html(combo(firstC,secondC)).appendTo(".list");
+                })
+            } else if (result==="complicated experiemental stuff"){
+                $(".per").html("");
+                $(".pert").html("<h1><span class='small'>n</span>C<span class='small'>k</span>*(P)^k*(1-P)^(n-k)</h1><div class='flex'><h1>number of trials: </h1><input class='n'></div><div class='flex'><h1>number of success: </h1><input class='k'></div><div class='flex'><h1>probability of success: </h1><input class='p'></div><button class='permis'>find</button>");
+                $(document).on("click", "#check", function(){
+                    var check = $("#check").prop("checked");
+                    if (check) {
+                        $(".num").html("<h1>Round to the nearest place (1=tenth):</h1><input class='place' type='number'>");
+                    }
+                    else {
+                        $(".num").html("");
+                    }
+                });
+                $(".permis").on("click", function(){
+                    var k=$(".k").val();
+                    var n=$(".n").val();
+                    var p=$(".p").val();
+                    var check = $("#check").prop("checked");
+                    var eqo;
+                    var round=$(".place").val();
+                    var sym;
+
+                    if (check){
+                        eqo=Math.round((combo(n,k)*(p)**(k)*(1-p)**(n-k))*10**round)/10**round;
+                        sym="≈ ";
+                        
+                    } else {
+                        eqo=combo(n,k)*(p)**(k)*(1-p)**(n-k);
+                        sym='= ';
+                    }
+
+                    
+                    
+
+                    $("<li></li>").html(sym+eqo).appendTo(".list");
+
+                })
+                
+            }
+
+            
+
+        });
+
+        $(".clear").on("click", function(){
+            $(".list").html("");
+        })
+
+        
+
+
+    </script>
+</body>
+</html>
